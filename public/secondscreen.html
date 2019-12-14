@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Computer #2459</title>
+    <script defer src="script.js"></script>
+    <link rel = "stylesheet" type = "text/css" href = "style.css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="inputNames">
+      <form>Name: <input type="text" id="name" /></form>
+      <input
+        type="button"
+        id="submitButton"
+        onclick="getScores(); submitScore();"
+        value="Add Score!"
+      />
+      <h1>Computer #2459</h1>
+
+      <img id="person" src="https://raw.githubusercontent.com/slw515/Final-Project-Documentation/master/labeled_images/Steven%20Wyks/1.jpg" alt="image">
+      <div id="infoContainer">
+        <h1>Current Person:</h1>
+        <h1 id="currentPerson"></h1>
+        <p>Social Credit Score:<b><div id="socialScore"></div></b></p>
+        <p>Current Standing<b><div id="standing"></div></b></p>
+        <p>Benefits:<div id="benefits"></div></p>
+      </div>
+      <!-- <input type="button" id="getScores" onclick="getScores();" /> -->
+    </div>
+    <script>
+      var socialScore = document.getElementById("socialScore");
+      var currentPerson = document.getElementById("currentPerson");
+      var personImage = document.getElementById("person");
+      var standing = document.getElementById("standing");
+      var benefits = document.getElementById("benefits");
+
+      setInterval(async () => {
+        getScoresSecondScreen();
+      }, 700);
+      async function getScoresSecondScreen() {
+        const response = await fetch("/api");
+        const scoreArray = await response.json();
+        var millis = Date.now();
+        var infoText = document.createElement("div");
+        milis = Math.floor(millis / 1000);
+        var latestFrame = 0;
+        var latestPerson = "";
+        var latestScore = 0;
+        for (item of scoreArray) {
+          var timeOfCapture = Math.floor(item.timestamp / 1000);
+          var timeDifference = milis - timeOfCapture;
+          if (item.timestamp > latestFrame) {
+            latestFrame = item.timestamp;
+            latestPerson = item.faceName;
+            latestScore = item.score;
+          }
+        }
+        console.log(latestPerson);
+        console.log(latestFrame);
+        if (latestScore >= 3000 && latestScore <= 3100) {
+          standing.innerHTML = "Fair";
+          if (latestScore >= 3010) {
+            benefits.innerHTML = "<ul style='list-style-type:square;'><li>Unrestricted Air Travel</li><li>Children Have Access to T1 Universities</li><li>Access to T2 Universities</li><li>Maximum Available Internet Speed: 10 mbps</li><li>Access to Some Premium Medicines</li><li>Price per liter of gas: 5 pounds</li></ul>";
+          }
+          else if  (latestScore >= 3030) {
+            benefits.innerHTML = "<ul style='list-style-type:square;'><li>Unrestricted Air Travel</li><li>Children Have Access to T1 Universities</li><li>Access to T1 Universities</li><li>Maximum Available Internet Speed: 11 mbps</li><li>Access to Most Premium Medicines</li><li>Price per liter of gas: 4.5 pounds</li></ul>";
+          }        
+        }
+        else if (latestScore < 3000) {
+          standing.innerHTML = "Poor";
+          if (latestScore < 3000 && latestScore >= 2980) {
+            benefits.innerHTML = "<ul style='list-style-type:square;'><li>Allowed To Travel Only On Weekends</li><li>Children Have Access To T2 Universities</li><li>Access To Some T2 Universities</li><li>Maximum Available Internet Speed: 8 mbps</li><li>Access to No Premium Medicines</li><li>Price per liter of gas: 6 pounds</li></ul>";
+          }
+          else if (latestScore < 2980 && latestScore >= 2950) {
+            benefits.innerHTML = "<ul style='list-style-type:square;'><li>Allowed To Travel Only On Weekends</li><li>Children Have Access To Some T2 Universities</li><li>Access To A Few T2 Universities</li><li>Maximum Available Internet Speed: 7 mbps</li><li>Access to No Premium Medicines</li><li>Price per liter of gas: 6.5 pounds</li></ul>";
+          }
+          else if (latestScore < 2950 && latestScore >= 2900) {
+            benefits.innerHTML = "<ul style='list-style-type:square;'><li>Barred From Air Travel</li><li>Can Travel By Train On Weekdays</li><li>Children Have Access To A Few T2 Universities</li><li>Access To A Few T2 Universities</li><li>Maximum Available Internet Speed: 6 mbps</li><li>Access to No Premium Medicines</li><li>Price per liter of gas: 7 pounds</li></ul>";
+          }
+        }
+        else if (latestScore > 3100) {
+          standing.innerHTML = "Good";
+          if (latestScore >= 3010) {
+            benefits.innerHTML = "<ul style='list-style-type:square;'><li>Unrestricted Air Travel</li><li>Children Have Access to T1 Universities</li><li>Access to T2 Universities</li><li>Maximum Available Internet Speed: 12 mbps</li><li>Access to All Premium Medicines</li><li>Price per liter of gas: 4 pounds</li></ul>";
+          }
+          else if  (latestScore >= 3030) {
+            benefits.innerHTML = "<ul style='list-style-type:square;'><li>Unrestricted Air Travel</li><li>Children Have Access to T1 Universities</li><li>Access to T1 Universities</li><li>Maximum Available Internet Speed: 15 mbps</li><li>Access to All Premium Medicines</li><li>Price per liter of gas: 3.5 pounds</li></ul>";
+          }        
+        }
+        currentPerson.innerHTML = latestPerson;
+        var splitName = latestPerson.split(" ");
+        console.log(splitName);
+        socialScore.innerHTML = latestScore;
+        personImage.src = "https://raw.githubusercontent.com/slw515/Final-Project-Documentation/master/labeled_images/" + splitName[0] + "%20" + splitName[1] + "/2.jpg"
+
+      }
+
+      //create a data entry with a specific name (empty) whenever someone leaves the frame.
+      //if the latest entry item is equal to "empty" do not append anything to the HTML document.
+    </script>
+  </body>
+</html>
