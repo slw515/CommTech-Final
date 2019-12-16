@@ -19,16 +19,19 @@ function startVideo() {
     err => console.error(err)
   );
 }
-
+//function runs when video plays
 video.addEventListener("play", async () => {
   const canvas = faceapi.createCanvasFromMedia(video);
   document.body.append(canvas);
   const displaySize = { width: video.width, height: video.height };
   const labeledFaceDescriptors = await loadLabeledImages();
+  //load images and data from images (on a github repo)
   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
   faceapi.matchDimensions(canvas, displaySize);
+  //function executes every 100 ms
   setInterval(async () => {
     timeStamp = 0;
+    //detecting all faces in videos with expressions and descriptions.
     const detections = await faceapi
       .detectAllFaces(video)
       .withFaceLandmarks()
@@ -42,7 +45,7 @@ video.addEventListener("play", async () => {
     const results = resizedDetections.map(d =>
       faceMatcher.findBestMatch(d.descriptor)
     );
-
+    //pass result emotions into variable
     // console.log(detections[0].expressions);
     var howAngry = detections[0].expressions.angry;
     var howNeutral = detections[0].expressions.neutral;
@@ -54,11 +57,11 @@ video.addEventListener("play", async () => {
     var millis = Date.now() - start;
 
     milis = Math.floor(millis / 1000);
-
+    //get data every 10 seconds
     if (milis % 10 == 0) {
       isGettingData = true;
     }
-
+    //loop through returned data and sort for latest entry to db of person in the frame.
     if (isGettingData == true) {
       console.log("retrieving");
       const response = await fetch("/api");
@@ -110,7 +113,7 @@ video.addEventListener("play", async () => {
     });
   }, 100);
 });
-
+//fetch all the facial data from Github repo
 function loadLabeledImages() {
   const labels = [
     "Black Widow",
