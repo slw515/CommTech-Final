@@ -12,7 +12,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "fs": "0.0.1-security",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "nedb": "^1.8.0",
     "nodemon": "^1.19.4"
   }
